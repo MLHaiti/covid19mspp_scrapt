@@ -36,10 +36,18 @@ def get_right_covid19links(str_start_date):
     pdf_links =[]
     now = datetime.now()
     init_date = str_start_date
+    df = None
     while increment_msppdate(init_date)['datetime'] <=  now :
         link = base_url+'Sitrep '+init_date+'.pdf'
         if is_pdf_link(link) :
             pdf_links.append(link)
+            # I will read a dataframe inside it
+            dataframe = read_department_report(link)
+            if df is None :
+                df = dataframe
+            else:
+                df.concat(dataframe)
             print(init_date)
         init_date = increment_msppdate(init_date)['str']
+    df.to_csv('mspp.csv')
     return pdf_links

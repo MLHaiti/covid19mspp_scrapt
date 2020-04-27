@@ -16,7 +16,7 @@ class TestHelper(unittest.TestCase):
         self.assertFalse(is_pdf_link('https://mspp.gouv.ht/site/downloads/Sitrep 05'))
 
     def test_get_right_covid19links(self):
-        str_start_date ='07-04-2020'
+        str_start_date ='01-04-2020'
         links = get_right_covid19links(str_start_date)
         self.assertGreater(len(links),3)
 if __name__ == '__main__':
