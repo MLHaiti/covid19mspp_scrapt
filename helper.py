@@ -11,5 +11,13 @@ def increment_msppdate(str_date):
 
 def read_department_report(url):
     df = tabula.read_pdf(url, pages="all", multiple_tables=True)
-    print(type(df[1]))
-    return df[1]
+    '''generally department_report is in the first dataframe '''
+    ##data = df[0].dropna(thresh=2)
+    data = df[0].dropna()
+    data.iloc[:,0] = data.iloc[:,0].str.replace('Grand Anse', 'Grand-Anse', regex=False)
+    data.iloc[:,0] = data.iloc[:,0].str.replace('Grand Total', 'Grand-Total', regex=False)
+    data = data[data.columns[0:]].apply(
+    lambda x: ' '.join(x.astype(str)),
+    axis=1)
+    data = data.str.split(' ', expand=True)
+    return data
