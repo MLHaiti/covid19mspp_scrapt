@@ -1,5 +1,6 @@
 from datetime import datetime , timedelta
 import tabula
+from  requests import request
 
 
 def increment_msppdate(str_date):
@@ -21,3 +22,17 @@ def read_department_report(url):
     axis=1)
     data = data.str.split(' ', expand=True)
     return data
+
+def is_pdf_link(url):
+    response = request(method='GET', url=url)
+    content_type = response.headers.get('content-type')
+    print(content_type)
+    if 'application/pdf' in content_type:
+        return True
+    else:
+        return False
+
+def get_right_covid19links(str_start_date):
+    pdf_links =[]
+
+    return str_start_date
