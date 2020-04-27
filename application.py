@@ -4,60 +4,31 @@ from bs4 import BeautifulSoup
 import tabula
 
 
-from PIL import Image
-import sys
+from datetime import datetime
 
-import pyocr
-import pyocr.builders
+from helper import increment_msppdate
 
-import urllib
+
 
 #lets scrapt all link in the mssp web site
 
-url= 'https://mspp.gouv.ht/newsite/documentation.php/'
-base_url = 'https://mspp.gouv.ht/newsite/'
-page = requests.get('https://mspp.gouv.ht/newsite/documentation.php')
-html_text = page.text
+#URL format for Bulletin du 7 Avril 2020 de la surveillance du nouveau Coronavirus 2019(COVID-19)
+site = "https://mspp.gouv.ht/site/downloads/"
+
+start_date = '29-02-2020'
+
+#datetime_object = datetime.strptime(date_str, '%m-%d-%Y')
+#date_object = datetime_object.date()
 
 
-#create a BeautifulSoup instance with the html_text variable
+st = increment_msppdate(start_date)
 
-soup = BeautifulSoup(html_text,'html.parser')
+print(st)
 
-
-def getLinks(mysoup):
-    a_elements = mysoup.find_all('a')
-    _links=[]
-
-    for a_element in a_elements:
-        _links.append(a_element.get('href'))
-    return _links
+end1 ='Sitrep 05-04-2020.pdf'
 
 
-links = getLinks(soup)
-### FILTER THE LIST
-pdf_links = [x for x in links if str(x)[-3:].lower()=='pdf']
-print(pdf_links)
+#dataf = tabula.read_pdf(site+end1, multiple_tables=True,pages='all')
 
-_pdf = requests.get(base_url+pdf_links[1])
-k=0
-df =[]
-# for pdf_link in pdf_links:
-#     frame = tabula.read_pdf(base_url+pdf_links[2], multiple_tables=True,pages='all')
-#     df.append(frame)
-#     print(frame)
-
-tool = pyocr.get_available_tools()[0]
-builder = pyocr.builders.TextBuilder()
-
-file = urllib.request.url2pathname(base_url+pdf_links[1])
-print(file)
-# txt = tool.image_to_string(
-#     Image.open(file),
-#     lang=lang,
-#     builder=builder
-# )
-
-# print(df)
 
 
