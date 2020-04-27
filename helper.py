@@ -15,12 +15,12 @@ def read_department_report(url):
     '''generally department_report is in the first dataframe '''
     ##data = df[0].dropna(thresh=2)
     data = df[0].dropna()
-    data.iloc[:,0] = data.iloc[:,0].str.replace('Grand Anse', 'Grand-Anse', regex=False)
-    data.iloc[:,0] = data.iloc[:,0].str.replace('Grand Total', 'Grand-Total', regex=False)
+    data.iloc[:,0] = data.iloc[:,0].astype(str).str.replace('Grand Anse', 'Grand-Anse', regex=False)
+    data.iloc[:,0] = data.iloc[:,0].astype(str).str.replace('Grand Total', 'Grand-Total', regex=False)
     data = data[data.columns[0:]].apply(
     lambda x: ' '.join(x.astype(str)),
     axis=1)
-    data = data.str.split(' ', expand=True)
+    data = data.astype(str).str.split(' ', expand=True)
     return data
 
 def is_pdf_link(url):
@@ -43,10 +43,11 @@ def get_right_covid19links(str_start_date):
             pdf_links.append(link)
             # I will read a dataframe inside it
             dataframe = read_department_report(link)
+            dataframe.to_csv('mssp_'+init_date+'.csv')
             if df is None :
                 df = dataframe
             else:
-                df.concat(dataframe)
+                df.append(dataframe)
             print(init_date)
         init_date = increment_msppdate(init_date)['str']
     df.to_csv('mspp.csv')
