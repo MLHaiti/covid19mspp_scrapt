@@ -26,13 +26,20 @@ def read_department_report(url):
 def is_pdf_link(url):
     response = request(method='GET', url=url)
     content_type = response.headers.get('content-type')
-    print(content_type)
     if 'application/pdf' in content_type:
         return True
     else:
         return False
 
 def get_right_covid19links(str_start_date):
+    base_url = "https://mspp.gouv.ht/site/downloads/"
     pdf_links =[]
-
-    return str_start_date
+    now = datetime.now()
+    init_date = str_start_date
+    while increment_msppdate(init_date)['datetime'] <=  now :
+        link = base_url+'Sitrep '+init_date+'.pdf'
+        if is_pdf_link(link) :
+            pdf_links.append(link)
+            print(init_date)
+        init_date = increment_msppdate(init_date)['str']
+    return pdf_links

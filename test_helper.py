@@ -1,5 +1,5 @@
 import unittest
-from helper import increment_msppdate , read_department_report, is_pdf_link
+from helper import increment_msppdate , read_department_report, is_pdf_link, get_right_covid19links
 import pandas as pd
 
 class TestHelper(unittest.TestCase):
@@ -15,5 +15,9 @@ class TestHelper(unittest.TestCase):
         self.assertTrue(is_pdf_link(url))
         self.assertFalse(is_pdf_link('https://mspp.gouv.ht/site/downloads/Sitrep 05'))
 
+    def test_get_right_covid19links(self):
+        str_start_date ='07-04-2020'
+        links = get_right_covid19links(str_start_date)
+        self.assertGreater(len(links),3)
 if __name__ == '__main__':
     unittest.main()
