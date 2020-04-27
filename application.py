@@ -15,7 +15,7 @@ from helper import increment_msppdate, read_department_report
 #URL format for Bulletin du 7 Avril 2020 de la surveillance du nouveau Coronavirus 2019(COVID-19)
 site = "https://mspp.gouv.ht/site/downloads/"
 
-start_date = '29-02-2020'
+start_date = '04-04-2020'
 
 
 st = increment_msppdate(start_date)
