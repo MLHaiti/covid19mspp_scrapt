@@ -1,6 +1,7 @@
 from datetime import datetime , timedelta
 import tabula
 from  requests import request
+import pandas as pd
 
 
 def increment_msppdate(str_date):
@@ -13,8 +14,12 @@ def increment_msppdate(str_date):
 def read_department_report(url):
     df = tabula.read_pdf(url, pages="all", multiple_tables=True)
     '''generally department_report is in the first dataframe '''
-    ##data = df[0].dropna(thresh=2)
-    data = df[0].dropna()
+    if isinstance(df, pd.DataFrame) :
+        data = df.dropna(thresh=2, axis='index')
+    else:
+        data = df[0].dropna(thresh=2, axis='index')
+
+    data = data[data.isna().sum(axis=1) < 3]
     data.iloc[:,0] = data.iloc[:,0].astype(str).str.replace('Grand Anse', 'Grand-Anse', regex=False)
     data.iloc[:,0] = data.iloc[:,0].astype(str).str.replace('Grand Total', 'Grand-Total', regex=False)
     data = data[data.columns[0:]].apply(
@@ -44,11 +49,12 @@ def get_right_covid19links(str_start_date):
             # I will read a dataframe inside it
             dataframe = read_department_report(link)
             dataframe.to_csv('mssp_'+init_date+'.csv')
-            if df is None :
-                df = dataframe
-            else:
-                df.append(dataframe)
-            print(init_date)
+            if dataframe.shape[0]>6 :
+                if df is None :
+                    df = dataframe
+                else:
+                    df = df.append(dataframe)
         init_date = increment_msppdate(init_date)['str']
+    df = df.dropna(axis='columns',thresh=1)
     df.to_csv('mspp.csv')
     return pdf_links
